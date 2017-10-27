@@ -1,0 +1,8 @@
+[package]
+name = "c2bs"
+version = "0.1.0"
+authors = ["Epsylon <eepsylon.3@gmail.com>"]
+
+[dependencies]
+nom = "3"
+error-chain = "0.11"
