@@ -65,15 +65,23 @@ These are:
 * `(` and `)`
 * `\`
 
-To escape a character is to put a `\` before it:
-* `\;`
-* `\{`
-* `\\`
+To escape a character is to put a `%` before it:
+* `%;`
+* `%{`
+* `%(`
+* `%%`
 * etc
 
-Third point is an escaped backslash. Since backslash is a special characters, it has to be escaped to appear as a backslash in the TeX code (But not in the resulting flowchart)
+Third point is an escaped percent sign. Since percent sign is used for escaping, you have to escape the percent itself to use it literally.
 
-Backslash may be replaced with other character in the future.
+Any character can be escaped, but for some of them it's required. 
+Currently these are:
+* `{`
+* `}`
+* `(`
+* `)`
+* `%`
+* `;`
 
 ### just TeX things
 
@@ -93,21 +101,15 @@ They can only be used in math mode. That is, be surrounded with dollar signs (`$
 
 `mathVariable = $NotMathThing$`
 
-Also, since backslash (and brackets) is a special character in c2bs, it has to be escaped, to the above commands will look like this:
-* `\\neq`
-* `\\ge`
-* etc
-* `\\sqrt\{number\}`
-* `\\frac\{numerator\}\{denominator\}`
-* etc
-
-To get a literal backslash (why would you want that?) you have to write `\\\\`.
+Also, since brackets are special characters in c2bs, they have to be escaped, so the above commands will look like this:
+* `\sqrt %{ number %}`
+* `\frac %{ numerator %} %{ denominator %}`
 
 ### common problems and their solutions
 
 ##### space problems
 A result of math mode weirdness.
-Something like this: `var = SomeFunction\(\)` will look ugly in math mode. You might want do disable math mode for SomeFunction: `var = $SomeFunction\(\)$`. This will still look bad, but in a different way. That is, there won't be a space between the assignment and the function. The correct way to do the thing is `var =$ SomeFunction\(\)$`. Spaces work like expected in not-math mode.
+Something like this: `var = SomeFunction%(%)` will look ugly in math mode. You might want do disable math mode for SomeFunction: `var = $SomeFunction%(%)$`. This will still look bad, but in a different way. That is, there won't be a space between the assignment and the function. The correct way to do the thing is `var =$ SomeFunction%(%)$`. Spaces work like expected in not-math mode.
 
 In short, the solution to space problems is to add dollar signs and more spaces until it worls. Or learn TeX, I guess.
 
@@ -131,7 +133,7 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 [ ] I/O blocks
 [ ] comments
 [ ] manually changing offsets between expressions
-[ ] not backslash as the escaping symbol
+[x] not backslash as the escaping symbol
 [ ] style configuration
 [ ] web interface
 [ ] good error messages

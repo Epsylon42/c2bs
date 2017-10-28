@@ -27,7 +27,7 @@ mod gen;
 
 use std::env;
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write, stderr};
 
 fn doit() -> Result<()> {
     let path = match env::args().nth(1) {
@@ -51,7 +51,15 @@ fn doit() -> Result<()> {
 }
 
 fn main() {
+    let mut stde = stderr();
+
     if let Err(e) = doit() {
-        println!("{}", e.description());
+        match *e.kind() {
+            ErrorKind::NoFile => writeln!(stde, "{}", e.description()),
+            ErrorKind::Nom(_) => writeln!(stde, "Parsing error: {}", e.description()),
+            ErrorKind::Io(_) => writeln!(stde, "I/O error: {}", e.description()),
+            ErrorKind::Msg(ref msg) => writeln!(stde, "{}", msg),
+            _ => writeln!(stde, "Unknown error"),
+        }.unwrap();
     }
 }

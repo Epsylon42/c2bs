@@ -9,12 +9,14 @@ flowchart {
         sum := 0
         i := b
         while ( i < c ) {
-            sum = sum + i \\cdot a
+            sum = sum + i \cdot a
             i = i + 1
         }
 
         while (condition) {
-            block; otherBlock
+            block; $otherBlock$
+            arg := \frac %{ 1 %} %{ 2 %}
+            $functionCall %( $arg$ %)$
         }
 
         res := sum

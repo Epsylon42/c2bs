@@ -3,6 +3,7 @@ use nom;
 use ast::*;
 
 use std::iter;
+use std::iter::FromIterator;
 
 fn anychar(input: &str) -> nom::IResult<&str, char> {
     if input.len() == 0 {
@@ -18,7 +19,7 @@ fn anychar(input: &str) -> nom::IResult<&str, char> {
 }
 
 named!(escaped_char<&str, char>,
-       preceded!(char!('\\'), call!(anychar))
+       preceded!(char!('%'), call!(anychar))
 );
 
 named!(pub flowchart<&str, Flowchart>,
@@ -69,13 +70,13 @@ named!(pub node<&str, Node>,
 
 named!(pub block<&str, Block>,
        map!(
-           many1!(
+           many0!(
                alt!(
-                   none_of!("\\;{}()\n") |
+                   none_of!(";%(){}\n") |
                    escaped_char
                )
            ),
-           |s: Vec<char>| Block {text: iter::once('$').chain(s.into_iter()).chain(iter::once('$')).collect()}
+           |chars| Block::from_iter(iter::once('$').chain(chars.into_iter()).chain(iter::once('$')))
        )
 );
 

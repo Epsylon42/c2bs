@@ -1,3 +1,5 @@
+use std::iter::FromIterator;
+
 #[derive(Debug, PartialEq)]
 pub enum Node {
     Block(Block),
@@ -9,6 +11,27 @@ pub enum Node {
 #[derive(Debug, PartialEq)]
 pub struct Block {
     pub text: String
+}
+
+impl FromIterator<char> for Block {
+    fn from_iter<I: IntoIterator<Item=char>>(iter: I) -> Self {
+        let iter = iter.into_iter();
+
+        let mut text = match iter.size_hint() {
+            (_, Some(n)) => String::with_capacity(n+10),
+            (n, None) => String::with_capacity(n+10)
+        };
+
+        for c in iter {
+            if c == '%' {
+                text.push('\\');
+            }
+
+            text.push(c);
+        }
+
+        Block { text }
+    }
 }
 
 #[derive(Debug, PartialEq)]
