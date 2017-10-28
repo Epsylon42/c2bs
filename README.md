@@ -131,6 +131,7 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 - [ ] for
 - [ ] do-while
 - [ ] I/O blocks
+- [ ] multiple flowcharts in a single file
 - [ ] comments
 - [ ] manually changing offsets between expressions
 - [x] not backslash as the escaping symbol
