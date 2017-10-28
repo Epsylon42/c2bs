@@ -123,19 +123,19 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 
 ### features that may or may not happen
 
-[x] flowchart names
-[x] input and output variables
-[x] blocks
-[x] if
-[x] while
-[ ] for
-[ ] do-while
-[ ] I/O blocks
-[ ] comments
-[ ] manually changing offsets between expressions
-[x] not backslash as the escaping symbol
-[ ] style configuration
-[ ] web interface
-[ ] good error messages
+- [x] flowchart names
+- [x] input and output variables
+- [x] blocks
+- [x] if
+- [x] while
+- [ ] for
+- [ ] do-while
+- [ ] I/O blocks
+- [ ] comments
+- [ ] manually changing offsets between expressions
+- [x] not backslash as the escaping symbol
+- [ ] style configuration
+- [ ] web interface
+- [ ] good error messages
 
 ## TL;DR: Learn TeX
