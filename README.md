@@ -21,9 +21,10 @@ Flowcharts are surrounded with `flowchart { ... }`
 
 They start with name, input variables and output variables. Input and output are optional.
 
-Flowcharts consist of expressions. Currently, three are supported:
+Flowcharts consist of expressions. Currently, four are supported:
 * if-else
 * while
+* for
 * block
 
 Expressions are separated with newlines or semicolons.
@@ -51,9 +52,13 @@ flowchart {
     while ( condition ) {
         doSomethingInLoop
     }
+    
+    for ( var from 0 to i ) {
+        doSomethingInForLoop
+    }
 }
 ```
-*comments are not part of the syntax (now)*
+*comments are not part of the syntax (yet)*
 
 ### escaping
 
@@ -128,7 +133,7 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 - [x] blocks
 - [x] if
 - [x] while
-- [ ] for
+- [x] for
 - [ ] do-while
 - [ ] I/O blocks
 - [ ] multiple flowcharts in a single file

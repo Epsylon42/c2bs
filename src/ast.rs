@@ -5,6 +5,7 @@ pub enum Node {
     Block(Block),
     If(If),
     While(While),
+    For(For),
     Nodes(Vec<Node>),
 }
 
@@ -45,6 +46,14 @@ pub struct If {
 pub struct While {
     pub cond: String,
     pub body: Box<Node>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct For {
+    pub var: String,
+    pub from: String,
+    pub to: String,
+    pub body: Box<Node>
 }
 
 #[derive(Debug, PartialEq)]

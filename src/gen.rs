@@ -20,6 +20,7 @@ impl Gen for Node {
             Node::Block(ref x) => x.gen(dst, name, prev),
             Node::If(ref x) => x.gen(dst, name, prev),
             Node::While(ref x) => x.gen(dst, name, prev),
+            Node::For(ref x) => x.gen(dst, name, prev),
             Node::Nodes(ref x) => x.gen(dst, name, prev),
         }
     }
@@ -153,6 +154,50 @@ impl Gen for While {
         );
 
         (String::from(name), loop_end, width + 2)
+    }
+}
+
+impl Gen for For {
+    fn gen(&self, dst: &mut String, name: &str, prev: &str) -> (String, String, u8) {
+        push_many!(dst,
+                   "\\node[block, below of=" prev "] "
+                   "(" name ") "
+                   "{$" self.var " := " self.from "$};\n"
+
+                   "\\node[decision, below of=" name ", node distance=1.5cm] "
+                   "(" name "B) "
+                   "{$" self.var " < " self.to "$};\n"
+
+                   "\\draw[l] (" name ") -- (" name "B);\n"
+        );
+
+        let (body_start, body_end, width) = self.body.gen(
+            dst,
+            format!("{}L", name).as_str(),
+            format!("{}B", name).as_str()
+        );
+
+        push_many!(dst,
+                   "\\node[block, below of=" body_end "] "
+                   "(" name "FE) "
+                   "{$ " self.var " = " self.var " + 1 $};\n"
+        );
+
+        let loop_end = format!("{}LE", name);
+        let width_str = format!("{}", width/2);
+
+        push_many!(dst,
+                   "\\draw[l] (" name "B) -- (" body_start ");\n"
+                   "\\draw[l] (" body_end ") -- (" name "FE);\n"
+
+                   "\\draw[l] (" name "FE) -- ++(0,-1) -| ($ (" name "B) + (" width_str "cm+1cm,0 ) $) -- (" name "B);\n"
+
+                   "\\coordinate[below=1.5cm of " name "FE] (" loop_end ");\n"
+
+                   "\\draw[lne] (" name "B) -- node[midway, above] {$-$} ++(-" width_str "cm-1cm,0 ) |- ($ (" loop_end ") + (0,0.5) $) -- (" loop_end ");\n"
+        );
+
+        (String::from(name), loop_end, width+2)
     }
 }
 

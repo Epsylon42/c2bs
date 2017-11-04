@@ -64,6 +64,7 @@ named!(pub node<&str, Node>,
        ws!(alt_complete!(
            _if => {Node::If} |
            _while => {Node::While} |
+           _for => {Node::For} |
            block => {Node::Block}
        ))
 );
@@ -134,5 +135,35 @@ named!(pub _while<&str, While>,
                          char!('}')
                      ) >>
                      (While {cond: cond.text, body: Box::new(nds)})
+       ))
+);
+
+named!(for_cond<&str, (String, String, String)>,
+       do_parse!(var: call!(nom::alphanumeric) >>
+                 call!(nom::space) >>
+                 tag!("from") >>
+                 call!(nom::space) >>
+                 from: call!(nom::alphanumeric) >>
+                 call!(nom::space) >>
+                 tag!("to") >>
+                 call!(nom::space) >>
+                 to: call!(nom::alphanumeric) >>
+                 ((var.to_string(), from.to_string(), to.to_string()))
+       )
+);
+
+named!(pub _for<&str, For>,
+       ws!(do_parse!(tag!("for") >>
+                     cond: delimited!(
+                         char!('('),
+                         for_cond,
+                         char!(')')
+                     ) >>
+                     nds: delimited!(
+                         char!('{'),
+                         nodes,
+                         char!('}')
+                     ) >>
+                     (For { var: cond.0, from: cond.1, to: cond.2, body: Box::new(nds) })
        ))
 );

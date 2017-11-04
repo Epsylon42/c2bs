@@ -21,4 +21,8 @@ flowchart {
 
         res := sum
     }
+
+    for (i from 0 to 10) {
+        dosomething
+    }
 }
