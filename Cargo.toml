@@ -6,3 +6,11 @@ authors = ["Epsylon <eepsylon.3@gmail.com>"]
 [dependencies]
 nom = "3"
 error-chain = "0.11"
+
+[lib]
+name = "c2bs"
+path = "src/lib.rs"
+
+[[bin]]
+name = "c2bs"
+path = "src/bin.rs"

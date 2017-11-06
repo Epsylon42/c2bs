@@ -1,29 +1,9 @@
-#[macro_use]
-extern crate nom;
+extern crate c2bs;
 
 #[macro_use]
 extern crate error_chain;
 
-error_chain! {
-    types {
-        Error, ErrorKind, ResultExt, Result;
-    }
-
-    foreign_links {
-        Io(::std::io::Error);
-        Nom(::nom::Err<u32>);
-    }
-
-    errors {
-        NoFile {
-            description("No argument with file name provided")
-        }
-    }
-}
-
-mod parser;
-mod ast;
-mod gen;
+use c2bs::{parser, gen, ErrorKind, Result};
 
 use std::env;
 use std::fs;

@@ -277,6 +277,7 @@ pub fn gen_flowchart(chart: &Flowchart, dst: &mut String) {
         );
 }
 
+//TODO: use something more structured than str for styles
 pub fn gen_document(doc: &Document, style: &str, dst: &mut String) {
     push_many!(dst,
                "\\documentclass[tikz]{standalone}\n"
