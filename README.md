@@ -128,7 +128,7 @@ Wait until manual offsets are implemented. Or edit the program output. Honestly,
 More like none at all, amrite?
 May be fixed in the future when I learn how to handle errors in the parser library I use.
 
-### features that may or may not happen
+### features that will probably happen
 
 - [x] flowchart names
 - [x] input and output variables
@@ -145,5 +145,6 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 - [ ] style configuration
 - [ ] web interface
 - [ ] good error messages
+- [ ] accepting input in YAML format
 
 ## TL;DR: Learn TeX
