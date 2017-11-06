@@ -60,6 +60,8 @@ flowchart {
 ```
 *comments are not part of the syntax (yet)*
 
+You can have multiple flowcharts in a single file
+
 ### escaping
 
 Some characters are special and have to be escaped in order to be interpreted correctly.
@@ -136,7 +138,7 @@ May be fixed in the future when I learn how to handle errors in the parser libra
 - [x] for
 - [ ] do-while
 - [ ] I/O blocks
-- [ ] multiple flowcharts in a single file
+- [x] multiple flowcharts in a single file
 - [ ] comments
 - [ ] manually changing offsets between expressions
 - [x] not backslash as the escaping symbol

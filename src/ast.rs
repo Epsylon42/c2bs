@@ -69,3 +69,5 @@ pub struct Flowchart {
     pub output: Option<String>,
     pub body: Node
 }
+
+pub struct Document(pub Vec<Flowchart>);

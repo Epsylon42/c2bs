@@ -26,55 +26,6 @@ impl Gen for Node {
     }
 }
 
-impl Gen for Flowchart {
-    fn gen(&self, dst: &mut String, name: &str, prev: &str) -> (String, String, u8) {
-        push_many!(dst,
-                   "\\node[below of=" prev "] (" name "_LBL) "
-                   "{ \\Large " self.name "};\n"
-        );
-
-        let mut start = format!("{}_LBL", name);
-
-        if let Some(ref inp) = self.input {
-            push_many!(dst,
-                       "\\node[below of=" start ", node distance=0.5cm] (" name "_IN) "
-                       "{ \\Large input: " inp "};\n"
-            );
-            start = format!("{}_IN", name);
-        }
-
-        if let Some(ref out) = self.output {
-            push_many!(dst,
-                       "\\node[below of=" start ", node distance=0.5cm] (" name "_OUT) "
-                       "{ \\Large output: " out "};\n"
-            );
-            start = format!("{}_OUT", name);
-        }
-
-        push_many!(dst,
-                   "\\node[be, below of=" start "] (" name "_BEGIN) "
-                   "{ \\large BEGIN };\n"
-        );
-
-        let (body_start, body_end, body_width) = self.body.gen(
-            dst,
-            name,
-            format!("{}_BEGIN", name).as_str()
-        );
-
-        push_many!(dst,
-                   "\\draw[l] (" name "_BEGIN) -- (" body_start ");\n"
-
-                   "\\node[be, below of=" body_end "] (" name "_END) "
-                   "{ \\large END };\n"
-
-                   "\\draw[l] (" body_end ") -- (" name "_END);\n"
-        );
-
-        (format!("{}_LBL", name), format!("{}_END", name), body_width)
-    }
-}
-
 impl Gen for Block {
     fn gen(&self, dst: &mut String, name: &str, prev: &str) -> (String, String, u8) {
         push_many!(dst,
@@ -276,40 +227,72 @@ impl Gen for If {
     }
 }
 
-pub fn gen(doc: &Gen) -> String {
-    let mut s = String::new();
-    doc.gen(&mut s, "A", "START");
+pub fn gen_flowchart(chart: &Flowchart, dst: &mut String) {
+        push_many!(dst,
+                   "\\begin{tikzpicture}[node distance = 1cm]\n"
+                   "\\coordinate (START) at (0,0);\n"
 
-    format!(
-        r#"
-\documentclass[tikz]{{standalone}}
+                   "\\node[below of=START] (LBL) "
+                   "{ \\Large " chart.name "};\n"
+        );
 
-\begin{{document}}
+        let mut start = "LBL";
 
-\usetikzlibrary{{shapes, calc, positioning}}
+        if let Some(ref inp) = chart.input {
+            push_many!(dst,
+                       "\\node[below of=" start ", node distance=0.5cm] (IN) "
+                       "{ \\Large input: " inp "};\n"
+            );
+            start = "IN";
+        }
 
-\tikzstyle{{base}}=[draw=blue, ultra thick, fill=blue!20, text badly centered]
+        if let Some(ref out) = chart.output {
+            push_many!(dst,
+                       "\\node[below of=" start ", node distance=0.5cm] (OUT) "
+                       "{ \\Large output: " out "};\n"
+            );
+            start = "OUT";
+        }
 
-\tikzstyle{{mh}}=[minimum height=2em]
+        push_many!(dst,
+                   "\\node[be, below of=" start "] (BEGIN) "
+                   "{ \\large BEGIN };\n"
+        );
 
-\tikzstyle{{decision}} = [base, diamond, aspect=2.5, inner sep=0.6]
-\tikzstyle{{be}} = [base, rectangle, rounded corners, mh,  text width=4.5em]
-\tikzstyle{{block}}=[base, rectangle, mh]
-\tikzstyle{{io}}=[base, trapezium, mh, trapezium left angle=60, trapezium right angle=120]
+        let (body_start, body_end, _) = chart.body.gen(
+            dst,
+            "A",
+            "BEGIN"
+        );
 
-\tikzstyle{{lne}}=[ultra thick]
-\tikzstyle{{l}}=[lne, ->]
+        push_many!(dst,
+                   "\\draw[l] (BEGIN) -- (" body_start ");\n"
 
+                   "\\node[be, below of=" body_end "] (END) "
+                   "{ \\large END };\n"
 
-\begin{{tikzpicture}}[node distance = 1cm]
+                   "\\draw[l] (" body_end ") -- (END);\n"
 
-\coordinate (START) at (0,0);
+                   "\\end{tikzpicture}\n"
+        );
+}
 
-{}
+pub fn gen_document(doc: &Document, style: &str, dst: &mut String) {
+    push_many!(dst,
+               "\\documentclass[tikz]{standalone}\n"
 
-\end{{tikzpicture}}
-\end{{document}}
-"#,
-        s
-    )
+               "\\begin{document}\n"
+               "\\usetikzlibrary{shapes, calc, positioning}\n"
+
+               style
+
+               "\n"
+    );
+
+    for chart in &doc.0 {
+        gen_flowchart(chart, dst);
+        dst.push('\n');
+    }
+
+    dst.push_str("\\end{document}\n");
 }

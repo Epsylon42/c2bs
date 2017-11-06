@@ -22,6 +22,10 @@ named!(escaped_char<&str, char>,
        preceded!(char!('%'), call!(anychar))
 );
 
+named!(pub document<&str, Document>,
+       map!(ws!(many1!(flowchart)), Document)
+);
+
 named!(pub flowchart<&str, Flowchart>,
        ws!(do_parse!(tag!("flowchart") >>
                      char!('{') >>
